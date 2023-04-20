@@ -18,20 +18,21 @@ class LoginController extends Controller
                 'message' => 'Email not exits',
                 'sucess' => 'false',
             ], 404);
+        }else{
+            if (!Hash::check($request->password, $user->password, [])) {
+                return response()->json([
+                    'message' => 'Password false'
+                ], 404);
+            }else{
+                $token = $user->createToken('authToken')->plainTextToken;
+                return response()->json([
+                    'message' => 'login succesfully',
+                    'access_token' => $token,
+                    'type_token' => 'Bearer'
+                ], 200);
+            }
         }
 
-        if (!Hash::check($request->password, $user->password, [])) {
-            return response()->json([
-                'message' => 'User not exist'
-            ], 404);
-        }
 
-        $token = $user->createToken('authToken')->plainTextToken;
-
-        return response()->json([
-            'message' => 'login succesfully',
-            'access_token' => $token,
-            'type_token' => 'Bearer'
-        ], 200);
     }
 }
