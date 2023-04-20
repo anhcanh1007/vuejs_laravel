@@ -12,6 +12,13 @@ class LoginController extends Controller
     public function login(LoginRequest $request)
     {
         $user = User::where('email', $request->email)->first();
+        if($user == null)
+        {
+            return response()->json([
+                'message' => 'Email not exits',
+                'sucess' => 'false',
+            ], 404);
+        }
 
         if (!Hash::check($request->password, $user->password, [])) {
             return response()->json([
@@ -19,10 +26,10 @@ class LoginController extends Controller
             ], 404);
         }
 
-        $token = $user->createTOken('authToken')->plainTextToken;
+        $token = $user->createToken('authToken')->plainTextToken;
 
         return response()->json([
-            'message' => 'đăng nhập thành công',
+            'message' => 'login succesfully',
             'access_token' => $token,
             'type_token' => 'Bearer'
         ], 200);

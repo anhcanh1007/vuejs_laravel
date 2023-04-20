@@ -3,7 +3,7 @@ import Login from '../components/Login.vue';
 import NotFound from '../components/NotFound.vue';
 const client = [
     {
-        path: "/",
+        path: "/home",
         component: App,
     },
     {

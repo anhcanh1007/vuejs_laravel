@@ -15,9 +15,17 @@ class RegisterController extends Controller
         $user['password'] = Hash::make($request->password);
         $user = User::create($user);
         $token = $user->createToken('remember_token')->plainTextToken;
-        return response()->json(
+        if($token) {
+            return response()->json(
                 [
                     'message' => 'Register Successfully',
+                    'token' => $token
                 ], 201);
+        }else{
+            return response()->json([
+                'message' => $request->errors(),
+            ]);
+        }
+
     }
 }
