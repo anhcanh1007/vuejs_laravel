@@ -2,62 +2,89 @@
     <div class="container">
         <div class="form-login">
             <h1>Đăng nhập</h1>
-            <div class="form-group form-setting">
-                <label for="">Tên đăng nhập</label>
-                <input
-                    type="text"
-                    name=""
-                    id=""
-                    class="form-control"
-                    placeholder=""
-                    aria-describedby="helpId"
-                />
-            </div>
-            <div class="form-group form-setting">
-                <label for="">Mật khẩu</label>
-                <input
-                    type="password"
-                    name=""
-                    id=""
-                    class="form-control"
-                    placeholder=""
-                    aria-describedby="helpId"
-                />
-            </div>
-            <div class="form-group form-setting">
-                <button
-                    type="button"
-                    class="btn btn-primary"
-                    data-toggle="button"
-                    aria-pressed="false"
-                    autocomplete="off"
-                >
-                    Login
-                </button>
-                <button
-                    type="button"
-                    class="btn btn-primary"
-                    data-toggle="button"
-                    aria-pressed="false"
-                    autocomplete="off"
-                >
-                    <route-link to="/register">Register</route-link>
-                </button>
-            </div>
+            <form action="" @submit.prevent="login">
+                <div class="form-group form-setting">
+                    <label for="">Email</label>
+                    <input
+                        type="email"
+                        name=""
+                        id=""
+                        class="form-control"
+                        placeholder=""
+                        aria-describedby="helpId"
+                        v-model="user.email"
+                    />
+                </div>
+                <div class="form-group form-setting">
+                    <label for="">Mật khẩu</label>
+                    <input
+                        type="password"
+                        name=""
+                        id=""
+                        class="form-control"
+                        placeholder=""
+                        aria-describedby="helpId"
+                        v-model="user.password"
+                    />
+                </div>
+                <div class="form-group form-setting">
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                        data-toggle="button"
+                        aria-pressed="false"
+                        autocomplete="off"
+                    >
+                        Login
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        data-toggle="button"
+                        aria-pressed="false"
+                        autocomplete="off"
+                    >
+                        <route-link to="/register">Register</route-link>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </template>
 <script>
 export default {
-    components: {
-    },
+    components: {},
     props: {},
     data() {
-        return {};
+        return {
+            result: {},
+            user: {
+                email: "",
+                password: "",
+            },
+        };
     },
     created() {},
-    methods: {},
-    mounted() {},
+    methods: {
+        login() {
+            axios.post('http://127.0.0.1:8000/api/login', this.user)
+                .then(
+                    ({data})=>{
+                        console.log(data);
+                        try {
+                            this.$router.push('home')
+                        } catch (error) {
+                            alert('fails')
+                            console.log(error)
+                        }
+                    }
+                )
+
+        },
+    },
+    mounted() {
+        console.log('runnning..')
+    },
 };
 </script>
 <style scoped>
@@ -73,7 +100,7 @@ export default {
 }
 .form-login {
     margin-top: 50px;
-    background-image: url('../../../../public/image/bglogin.jpg');
+    background-image: url("../../../../public/image/bglogin.jpg");
     background-color: antiquewhite;
     box-shadow: 0 0 5px blue;
     border-radius: 10px;
@@ -88,9 +115,9 @@ export default {
     width: 50%;
     margin-left: 30%;
 }
-.form-setting label{
+.form-setting label {
     color: white;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
     font-size: 20px;
     margin-left: 20px;
     text-align: center;

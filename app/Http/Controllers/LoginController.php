@@ -6,6 +6,7 @@ use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -26,13 +27,18 @@ class LoginController extends Controller
             }else{
                 $token = $user->createToken('authToken')->plainTextToken;
                 return response()->json([
+                    'user' => $user,
                     'message' => 'login succesfully',
                     'access_token' => $token,
                     'type_token' => 'Bearer'
                 ], 200);
             }
         }
+    }
 
-
+    public function logout(Request $request){
+        $user = $request->user();
+        dd($user);
+        return response()->json(['message' => 'logout']);
     }
 }

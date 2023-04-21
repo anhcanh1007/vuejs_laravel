@@ -17,8 +17,17 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return 'ok xin chào';
+    return $request->user();
+});
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', function (Request $request) {
+        $user = $request->user();
+        $user->tokens()->where('id',$user->currentAccessToken()->id)->delete();
+        return response()->json(['message' => 'logout']);
+    });
 });
 
 Route::post('/register', [RegisterController::class, 'register']);
 Route::post('/login', [LoginController::class, 'login']);
+
+

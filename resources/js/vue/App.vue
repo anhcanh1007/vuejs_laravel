@@ -31,6 +31,7 @@
             </div>
         </nav>
     </div>
+    <button type="submit" class="btn btn-primary" @click.prevent="logout">Logout</button>
     <router-view></router-view>
 </template>
 <script>
@@ -44,7 +45,17 @@ export default {
         return {};
     },
     created() {},
-    methods: {},
+    methods: {
+        async logout() {
+            try {
+                await axios.post('http://127.0.0.1:8000/api/logout');
+                this.$router.push('login');
+            } catch (error) {
+                console.log(error);
+            }
+
+        }
+    },
     mounted() {},
 };
 </script>

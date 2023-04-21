@@ -40,7 +40,7 @@ class RegisterRequest extends FormRequest
             'password.required' => 'Password không được để trống',
             'password.min' => 'Password phải nhiều hơn 5 ký tự',
             'password.max' => 'Password phải ít hơn 20 ký tự',
-            'c_password.requỉed' => 'Trường này không được để trống',
+            'c_password.required' => 'Trường này không được để trống',
             'c_password.same' => 'Mật khẩu chưa trùng khớp',
             'email.unique' => 'Emai đã tồn tại',
         ];

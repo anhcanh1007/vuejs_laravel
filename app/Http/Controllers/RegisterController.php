@@ -20,6 +20,7 @@ class RegisterController extends Controller
             $token = $user->createToken('remember_token')->plainTextToken;
             return response()->json(
                 [
+                    'user' => $user,
                     'message' => 'Register Successfully',
                     'token' => $token
                 ], 201);
