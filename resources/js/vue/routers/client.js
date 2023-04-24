@@ -1,21 +1,36 @@
 import App from '../App.vue';
 import Login from '../components/Login.vue';
 import NotFound from '../components/NotFound.vue';
+import Home from '../components/Home.vue';
 const client = [
     {
         path: "/home",
-        component: App,
+        component: Home,
         name: 'home'
     },
     {
         path: "/login",
         component: Login,
-        name: 'login'
+        name: 'login',
+        meta: {
+            requiresAuth: false,
+        }
     },
     {
         path: '/register',
         component: () => import('../components/Register.vue'),
-        name: 'register'
+        name: 'register',
+        meta: {
+            requiresAuth: false,
+        }
+    },
+    {
+        path: '/dashboard',
+        component: () => import('../components/Dashboard.vue'),
+        name: 'dashboard',
+        meta: {
+            requiresAuth: true,
+        }
     },
     {
         path: '/:pathMatch(.*)*',

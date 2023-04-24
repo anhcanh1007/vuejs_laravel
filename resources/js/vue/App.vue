@@ -1,62 +1,40 @@
 <template>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <router-link class="text-white" to="home">Home </router-link>
+    <ul class="navbar-nav">
+        <li class="nav-item"><router-link class="text-white ml-2" to="login" v-if="$store.getters.getToken == 0">Login</router-link></li>
+        <li class="nav-item"><router-link class="text-white ml-2" to="register" v-if="$store.getters.getToken == 0">Register</router-link></li>
+        <li class="nav-item"><router-link class="text-white ml-2" to="dashboard" v-if="$store.getters.getToken != 0">Dashboard</router-link></li>
+    </ul>
+</nav>
+<router-view></router-view>
 
-    <div>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <button
-                class="navbar-toggler"
-                type="button"
-                data-toggle="collapse"
-                data-target="#navbarNav"
-                aria-controls="navbarNav"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-            >
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item active">
-                        <a class="nav-link" href=""><router-link to="/">Home</router-link></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Features</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href=""><router-link to="/login">Login</router-link></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href=""><router-link to="/register">Register</router-link></a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </div>
-    <button type="submit" class="btn btn-primary" @click.prevent="logout">Logout</button>
-    <router-view></router-view>
 </template>
 <script>
+import Home from "./components/Home.vue";
 
 export default {
-    watch: {},
-    components: {
-    },
-    props: {},
-    data() {
-        return {};
-    },
-    created() {},
-    methods: {
-        async logout() {
-            try {
-                await axios.post('http://127.0.0.1:8000/api/logout');
-                this.$router.push('login');
-            } catch (error) {
-                console.log(error);
-            }
 
-        }
-    },
-    mounted() {},
+    // watch: {},
+    // components: {
+    // },
+    // props: {},
+    // data() {
+    //     return {};
+    // },
+    // created() {},
+    // methods: {
+    //     async logout() {
+    //         try {
+    //             await axios.post('http://127.0.0.1:8000/api/logout');
+    //             this.$router.push('login');
+    //         } catch (error) {
+    //             console.log(error);
+    //         }
+
+    //     }
+    // },
+    // mounted() {},
 };
 </script>
 <style scoped></style>

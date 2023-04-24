@@ -1,18 +1,20 @@
 <template>
     <div class="container">
         <div class="form-login">
-            <h1>Đăng nhập</h1>
+            <div class="errors"  >
+                        <i>{{ form }}</i>
+                    </div>
             <form action="" @submit.prevent="login">
                 <div class="form-group form-setting">
                     <label for="">Email</label>
                     <input
                         type="email"
                         name=""
-                        id=""
+                        id="email"
                         class="form-control"
                         placeholder=""
                         aria-describedby="helpId"
-                        v-model="user.email"
+                        v-model="form.email"
                     />
                 </div>
                 <div class="form-group form-setting">
@@ -20,12 +22,15 @@
                     <input
                         type="password"
                         name=""
-                        id=""
+                        id="password"
                         class="form-control"
                         placeholder=""
                         aria-describedby="helpId"
-                        v-model="user.password"
+                        v-model="form.password"
                     />
+                    <!-- <div class="errors" v-if="errors.password" >
+                        <i>{{ errors.password[0] }}</i>
+                    </div> -->
                 </div>
                 <div class="form-group form-setting">
                     <button
@@ -47,44 +52,80 @@
                         <route-link to="/register">Register</route-link>
                     </button>
                 </div>
+                <div class="form-setting">
+                    <div class="errors" v-if="error" >
+                        <p class="text-danger">{{ error }}</p>
+                </div>
+                </div>
             </form>
         </div>
     </div>
 </template>
 <script>
+import { ref } from "vue";
+import { reactive } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 export default {
-    components: {},
-    props: {},
-    data() {
-        return {
-            result: {},
-            user: {
-                email: "",
-                password: "",
-            },
-        };
-    },
-    created() {},
-    methods: {
-        login() {
-            axios.post('http://127.0.0.1:8000/api/login', this.user)
-                .then(
-                    ({data})=>{
-                        console.log(data);
-                        try {
-                            this.$router.push('home')
-                        } catch (error) {
-                            alert('fails')
-                            console.log(error)
-                        }
-                    }
-                )
+    setup() {
+        const router = useRouter();
+        const store = useStore();
 
-        },
-    },
-    mounted() {
-        console.log('runnning..')
-    },
+        let form = reactive({
+            email: '',
+            password: '',
+        });
+
+        let error = ref('');
+
+        const login = async() => {
+            await axios
+                .post("http://127.0.0.1:8000/api/login", form)
+                .then((response) => {
+                    if(response.data.success){
+                        store.dispatch('setToken', response.data.data.token)
+                        router.push('dashboard')
+                    }else{
+                        error.value = response.data.message;
+                    }
+
+                })
+        };
+
+        return { form,login, error  };
+    }
+    // components: {},
+    // props: {},
+    // data() {
+    //     return {
+    //         email: '',
+    //         password: '',
+    //         errors: ref({}),
+    //         error: ''
+    //     };
+    // },
+    // created() {},
+    // methods: {
+    //     login() {
+    //         axios.post('http://127.0.0.1:8000/api/login',{
+    //             email: this.email,
+    //             password: this.password
+    //         })
+    //             .then((response) => {
+    //                 console.log(response)
+    //                 this.$router.push('home')
+    //             })
+    //             .catch(error => {
+    //                 if(error.response && error.response.status === 422){
+    //                     this.errors = error.response.data.error;
+    //                     console.log(this.errors)
+    //                 }
+    //             })
+
+    //     },
+    // },
+    // mounted() {
+    // },
 };
 </script>
 <style scoped>
@@ -110,6 +151,15 @@ export default {
     text-align: center;
     color: white;
     margin-bottom: 40px;
+}
+.form-setting .errors{
+    height: 30px;
+    background-color: bisque;
+}
+.form-setting i {
+    color: red;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
 }
 .form-setting {
     width: 50%;

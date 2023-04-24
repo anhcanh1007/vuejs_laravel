@@ -150,6 +150,7 @@ export default {
                     if(error.response && error.response.status === 422){
                         console.log(error.response.data.errors)
                         errors.value = error.response.data.errors;
+                        console.log(errors.value)
                     } else {
                         console.log(error)
                     }
