@@ -25,6 +25,11 @@ const client = [
         }
     },
     {
+        path: '/naptien',
+        component: () => import('../components/NapTien.vue'),
+        name: 'naptien',
+    },
+    {
         path: '/dashboard',
         component: () => import('../components/Dashboard.vue'),
         name: 'dashboard',

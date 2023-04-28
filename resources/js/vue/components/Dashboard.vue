@@ -2,6 +2,7 @@
     <div class="container mt-30">
         <h2>Dashboard: {{ user }}</h2>
         <button type="" class="btn btn-dark mt-2" @click="logout">Logout</button>
+        <button type="" class="btn btn-dark mt-2 ml-2" @click="naptien">Nạp tiền</button>
     </div>
 </template>
 
@@ -21,12 +22,16 @@ import { useStore } from 'vuex'
                 router.push('login')
             }
 
+            const naptien = () => {
+                router.push('naptien')
+            }
+
             axios.get('http://127.0.0.1:8000/api/user')
                 .then(res => {
                     user.value = res.data.name
                 })
 
-                return {user, logout};
+                return {user, logout, naptien};
         }
     }
 </script>

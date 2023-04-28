@@ -1,8 +1,9 @@
 import store from "../store/index.js";
 import client from "./client.js";
+import admin from "./admin.js";
 import { createRouter, createWebHistory } from "vue-router";
 
-const routes = [...client];
+const routes = [...client, ...admin];
 
 const router = createRouter({
     history: createWebHistory(),

@@ -28,9 +28,6 @@
                         aria-describedby="helpId"
                         v-model="form.password"
                     />
-                    <!-- <div class="errors" v-if="errors.password" >
-                        <i>{{ errors.password[0] }}</i>
-                    </div> -->
                 </div>
                 <div class="form-group form-setting">
                     <button
