@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TransactionRequest;
 use App\Models\Transaction;
+use App\Notifications\DepositRequestNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class TransactionController extends Controller
 {
@@ -14,8 +16,8 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        // $transactions = Transaction::all();
-        // return response()->json($transactions, 200);
+        $transactions = Transaction::all();
+        return view('admin.list_transaction', compact('transactions'));
     }
 
     /**
@@ -29,6 +31,8 @@ class TransactionController extends Controller
         $transaction['status'] = 1;
         if($request->validated()) {
             $transaction = Transaction::create($transaction);
+            Notification::send($transaction, new DepositRequestNotification($transaction));
+            // $transaction->notify(new DepositRequestNotification($transaction));
             return response()->json($transaction, 201);
         }
     }
@@ -66,7 +70,8 @@ class TransactionController extends Controller
     public function get_transaction_by_id(Request $request)
     {
         $user = $request->user();
-        dd($user);
-        // $transaction =
+        $id_user = $user->id;
+        $result = Transaction::where('id_user', $id_user)->get();
+        return response()->json($result, 200);
     }
 }

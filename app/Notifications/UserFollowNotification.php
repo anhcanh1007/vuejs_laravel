@@ -7,16 +7,17 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class DepositRequestNotification extends Notification
+class UserFollowNotification extends Notification
 {
     use Queueable;
-    public $transaction;
+    public $user;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct($transaction)
+    public function __construct($user)
     {
-        $this->transaction = $transaction;
+        $this->user = $user;
     }
 
     /**
@@ -45,20 +46,12 @@ class DepositRequestNotification extends Notification
      *
      * @return array<string, mixed>
      */
-    // public function toArray(object $notifiable): array
-    // {
-    //     return [
-    //         'name' => $this->transaction['fullname'],
-    //         'amount' => $this->transaction['deposit_amount']
-    //     ];
-    // }
-    public function toDatabase($notifiable)
+    public function toArray(object $notifiable): array
     {
         return [
-            'fullname' => $this->transaction['fullname'],
-            'deposit_amount' => $this->transaction['deposit_amount'],
-            'status' => $this->transaction['status'],
-            'create_date' => $this->transaction['created_at'],
+            'user_id' => $this->user['id'],
+            'name' => $this->user['name'],
+            'email' => $this->user['email'],
         ];
     }
 }

@@ -1,10 +1,10 @@
 <template>
-    <div class="container">
+    <div class="row">
         <div class="form-login">
-            <div class="errors"  >
-                        <i>{{ form }}</i>
-                    </div>
-            <form action="" @submit.prevent="login">
+            <div class="title">
+                <h1>WELCOME! PLEASE LOGIN!</h1>
+            </div>
+            <form action="" @submit.prevent="login" class="form">
                 <div class="form-group form-setting">
                     <label for="">Email</label>
                     <input
@@ -18,7 +18,7 @@
                     />
                 </div>
                 <div class="form-group form-setting">
-                    <label for="">Mật khẩu</label>
+                    <label for="">Password</label>
                     <input
                         type="password"
                         name=""
@@ -50,9 +50,9 @@
                     </button>
                 </div>
                 <div class="form-setting">
-                    <div class="errors" v-if="error" >
-                        <p class="text-danger">{{ error }}</p>
-                </div>
+                    <div class="errors" v-if="error">
+                        <p>{{ error }}</p>
+                    </div>
                 </div>
             </form>
         </div>
@@ -69,28 +69,31 @@ export default {
         const store = useStore();
 
         let form = reactive({
-            email: '',
-            password: '',
+            email: "",
+            password: "",
         });
 
-        let error = ref('');
+        let error = ref("");
 
-        const login = async() => {
+        const login = async () => {
             await axios
                 .post("http://127.0.0.1:8000/api/login", form)
                 .then((response) => {
-                    if(response.data.success){
-                        store.dispatch('setToken', response.data.data.token)
-                        router.push('dashboard')
-                    }else{
+                    if (response.data.success) {
+                        store.dispatch("setToken", response.data.data.token);
+                        router.push("dashboard");
+                    } else {
                         error.value = response.data.message;
+                        console.log(error);
                     }
-
                 })
+                .catch((error) => {
+                    console.log(error);
+                });
         };
 
-        return { form,login, error  };
-    }
+        return { form, login, error };
+    },
     // components: {},
     // props: {},
     // data() {
@@ -126,52 +129,60 @@ export default {
 };
 </script>
 <style scoped>
-.form {
-    width: 500px;
-    height: 100px;
-    background-color: blueviolet;
+.title {
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
 }
-.form h1 {
-    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-        "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-    padding: 20px 50px;
+.title h1 {
+    color: #ffffff;
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+        "Lucida Sans", Arial, sans-serif;
+    text-shadow: 0 0 6px darkgoldenrod;
+}
+.form {
+    width: 90%;
 }
 .form-login {
-    margin-top: 50px;
-    background-image: url("../../../../public/image/bglogin.jpg");
-    background-color: antiquewhite;
-    box-shadow: 0 0 5px blue;
+    min-width: 100%;
+    height: 700px;
+    background-image: url("../../../../public/image/CSS-Particles.gif");
+}
+
+.form-setting .errors {
+    height: 30px;
+    background-color: cadetblue;
     border-radius: 10px;
 }
-.form-login h1 {
-    padding-top: 20px;
-    text-align: center;
-    color: white;
-    margin-bottom: 40px;
-}
-.form-setting .errors{
-    height: 30px;
-    background-color: bisque;
-}
-.form-setting i {
-    color: red;
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: bold;
+p{
+    padding-left: 10px;
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+        "Lucida Sans", Arial, sans-serif;
+        color: red;
+        padding-top: 2px;
 }
 .form-setting {
     width: 50%;
     margin-left: 30%;
 }
 .form-setting label {
-    color: white;
-    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+    color: #ffffff;
+    text-shadow: 0 0 6px orange;
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+        "Lucida Sans", Arial, sans-serif;
     font-size: 20px;
     margin-left: 20px;
     text-align: center;
 }
 .form-setting button {
+    background-color: darkolivegreen;
     margin-bottom: 20px;
     margin-right: 10px;
 }
+.form-setting button:hover {
+    background-color: bisque;
+    transition: 2s;
+}
+
 </style>
 <style lang="scss" scoped></style>

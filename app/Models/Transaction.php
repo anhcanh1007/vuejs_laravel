@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Notification;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
 
 class Transaction extends Model
 {
-    use HasFactory;
+    use HasFactory,Notifiable;
 
     protected $table = 'transactions';
     public $primaryKey = 'id';
@@ -23,4 +25,9 @@ class Transaction extends Model
     ];
 
     use SoftDeletes;
+
+    public function notification()
+    {
+        return $this->hasOne(Notification::class);
+    }
 }

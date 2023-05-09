@@ -35,13 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/transactions', TransactionController::class);
     Route::get('/get_transaction_by_id', [TransactionController::class, 'get_transaction_by_id']);
 });
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', function (Request $request) {
-        $user = $request->user();
-        $user->tokens()->where('id',$user->currentAccessToken()->id)->delete();
-        return response()->json(['message' => 'logout']);
-    });
-});
+
 
 
 

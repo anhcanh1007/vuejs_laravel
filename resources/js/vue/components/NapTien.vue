@@ -1,8 +1,5 @@
 <template>
-    <div class="container">
-        <div class="title">
-            <h1>Xin chào: Đây là trang nạp tiền</h1>
-        </div>
+    <div class="row">
         <div class="payments">
             <div class="payment-btn">
                 <button class="btn-checkout-payment">MoMo</button>
@@ -11,8 +8,7 @@
                 </button>
             </div>
         </div>
-
-        <div class="banks" id="listBank">
+        <div class="banks" id="listBank" v-if="list_bank">
             <ul>
                 <li
                     v-for="bank in banks"
@@ -24,7 +20,7 @@
             </ul>
         </div>
         <div class="account-info">
-            <table class="table table-light" v-if="account">
+            <table class="table-account" v-if="account">
                 <thead class="thead-light">
                     <tr>
                         <th>Tên tài khoản</th>
@@ -44,57 +40,79 @@
                     </tr>
                 </tfoot>
             </table>
-            <div>
+        </div>
+        <div class="form-deposit">
+            <div class="title-deposit">
                 <h1>Phiếu nạp tiền</h1>
-                <form class="form-group" @submit.prevent="napTien">
-                    <input
-                        type="number"
-                        placeholder="Số tiền đã chuyển"
-                        class="form-control mb-2"
-                        v-model="form.deposit_amount"
-                    />
-                    <i v-if="errors.deposit_amount" class="errors">{{
-                        errors.deposit_amount[0]
-                    }}</i>
-                    <input
-                        type="text"
-                        placeholder="Họ và tên người đã chuyển"
-                        class="form-control mb-2"
-                        v-model="form.fullname"
-                    />
-                    <input
-                        type="text"
-                        placeholder="Mã giao dịch"
-                        class="form-control mb-2"
-                        v-model="form.id_transaction"
-                    />
-                    <input
-                        type="hidden"
-                        placeholder="Mã giao dịch"
-                        class="form-control mb-2"
-                        v-model="form.payment"
-                    />
-                    <button class="btn btn-default btn-success" type="submit">
-                        Tạo phiếu nạp
-                    </button>
-                </form>
             </div>
-            <div class="table table-light">
+            <form class="form-group" @submit.prevent="napTien">
+                <input
+                    type="number"
+                    placeholder="Số tiền đã chuyển"
+                    class="form-control mb-2"
+                    v-model="form.deposit_amount"
+                />
+                <div class="errors" v-if="errors.deposit_amount">
+                    <i >{{
+                    errors.deposit_amount[0]
+                }}</i>
+                </div>
+
+                <input
+                    type="text"
+                    placeholder="Họ và tên người đã chuyển"
+                    class="form-control mb-2"
+                    v-model="form.fullname"
+                />
+                <input
+                    type="text"
+                    placeholder="Mã giao dịch"
+                    class="form-control mb-2"
+                    v-model="form.id_transaction"
+                />
+                <input
+                    type="hidden"
+                    placeholder="Mã giao dịch"
+                    class="form-control mb-2"
+                    v-model="form.payment"
+                />
+                <button class="btn btn-default btn-success" type="submit">
+                    Tạo phiếu nạp
+                </button>
+            </form>
+        </div>
+        <div class="info-depo" >
+            <div class="title-deposit">
                 <h1>Thông tin nạp tiền</h1>
-                <thead class="thead-light">
-                    <tr>
-                        <th>#</th>
-                        <th>Họ tên</th>
-                        <th>Số tiền đã nạp</th>
-                        <th>Ngày nạp</th>
-                        <th>Trạng thái</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                    </tr>
-                </tbody>
             </div>
+            <table class="table table-info">
+                <tr>
+                    <th>#</th>
+                    <th>Họ tên</th>
+                    <th>Số tiền đã nạp</th>
+                    <th>Ngày nạp</th>
+                    <th>Trạng thái</th>
+                    <th></th>
+                </tr>
+                <tr v-for="info in info_deposit">
+                    <td>{{ info.id }}</td>
+                    <td>{{ info.fullname }}</td>
+                    <td>{{ info.deposit_amount }}</td>
+                    <td>{{ new Date(info.created_at).toLocaleString('vi-VN') }}</td>
+                    <td>
+                        {{ info.status === 1 ? "Processing" : "Complete" }}
+                    </td>
+                    <td>
+                        <button
+                            v-if="info.status == 2"
+                            type="button"
+                            class="btn btn-primary"
+                        >
+                            Đầu tư
+                        </button>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 </template>
@@ -107,7 +125,10 @@ export default {
         const router = useRouter();
         let banks = ref([]);
         let errors = ref([]);
+        let list_bank = ref(false);
         let account = ref(null);
+        let info_deposit = ref();
+        let invest = ref(false);
         const form = ref({
             deposit_amount: "",
             fullname: "",
@@ -120,9 +141,10 @@ export default {
                 const response = await axios.get(
                     "http://127.0.0.1:8000/api/banks"
                 );
+                list_bank.value = true;
                 banks.value = response.data;
             } catch (e) {
-                console.log(e);
+                // console.log(e);
             }
         };
 
@@ -132,7 +154,7 @@ export default {
                     .get(`http://127.0.0.1:8000/api/getaccount/${bankId}`)
                     .then((result) => {
                         account.value = result.data;
-                        console.log(result.data);
+                        // console.log(result.data);
                     })
                     .catch((err) => {
                         // console.log(err.response.data.errors);
@@ -152,16 +174,26 @@ export default {
                         alert(
                             "Yêu cầu nạp tiền thành công! Vui lòng chờ xử lí!"
                         );
-                        router.push("dashboard");
+
+                        // router.push("dashboard");
                     })
                     .catch((e) => {
                         errors.value = e.response.data.errors;
-                        console.log(e);
+                        // console.log(e);
                     });
             } catch (e) {
-                console.log(e);
+                // console.log(e);
             }
         };
+
+        axios
+            .get("http://127.0.0.1:8000/api/get_transaction_by_id")
+            .then((res) => {
+                info_deposit.value = res.data;
+            })
+            .catch((e) => {
+                console.log(e);
+            });
 
         return {
             banks,
@@ -171,6 +203,9 @@ export default {
             napTien,
             form,
             errors,
+            info_deposit,
+            invest,
+            list_bank,
         };
     },
 };
@@ -179,8 +214,8 @@ export default {
 .payments {
     height: 50px;
     width: 100%;
-    background-color: darkblue;
     border-radius: 10px;
+    background-image: url("../../../../public/image/d.jpg");
 }
 
 .payments .payment-btn {
@@ -194,7 +229,7 @@ export default {
 .btn-checkout-payment {
     width: 150px;
     height: auto;
-    background-color: bisque;
+    background-color: cadetblue;
     color: black;
     font-size: 18px;
     font-weight: bold;
@@ -215,10 +250,9 @@ export default {
 
 .banks {
     height: auto;
-    width: auto;
-    margin-top: 20px;
+    width: 100%;
+    margin-top: 5px;
     text-align: center;
-    float: center;
 }
 .banks ul {
     background-color: cadetblue;
@@ -236,9 +270,54 @@ export default {
     color: bisque;
     cursor: pointer;
 }
+.account-info {
+    width: 100%;
+    text-align: center;
+}
+.table-account {
+    width: 50%;
+    height: auto;
+    border: 1px solid rosybrown;
+    margin-left: 25%;
+}
+.table-account th {
+    background-color: darkolivegreen;
+    color: white;
+    font-size: 25px;
+    font-family: cursive;
+}
+.table-account tr {
+    background-color: cadetblue;
+    color: white;
+    font-size: 25px;
+    font-family: cursive;
+}
+.form-deposit{
+    width: 50%;
+    margin-left: 25%;
+    margin-top: 5px;
+}
+.title-deposit{
+    background-color: cadetblue;
+}
+.title-deposit h1 {
+    color: cornsilk;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 28px;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bolder;
+}
+.form-deposit input{
+    background-color: antiquewhite;
+}
+.form-deposit button{
+    margin-left: 40%;
+}
 .errors {
     height: 30px;
-    background-color: cadetblue;
+    background-color: silver;
     margin-bottom: 10px;
 }
 i {
@@ -247,4 +326,10 @@ i {
     padding: 5px 5px 5px 5px;
     margin-bottom: 10px;
 }
+.info-depo{
+    width: 50%;
+    margin-left: 25%;
+    border: 1px solid darkgoldenrod;
+}
+
 </style>

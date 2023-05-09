@@ -1,8 +1,10 @@
 <template>
-    <div class="container">
+    <div class="row">
         <div class="form-login">
-            <h1>Đăng kí</h1>
-            <form action="" @submit.prevent="register">
+            <div class="title">
+                <h1>LET'S CREATE AN ACCOUNT</h1>
+            </div>
+            <form action="" @submit.prevent="register" class="form">
                 <div class="form-group form-setting">
                     <label for="">Email</label>
                     <input
@@ -19,7 +21,7 @@
                     </div>
                 </div>
                 <div class="form-group form-setting">
-                    <label for="">Tên đăng nhập</label>
+                    <label for="">Username</label>
                     <input
                         type="text"
                         name=""
@@ -34,7 +36,7 @@
                     </div>
                 </div>
                 <div class="form-group form-setting">
-                    <label for="">Mật khẩu</label>
+                    <label for="">Password</label>
                     <input
                         type="password"
                         name=""
@@ -49,7 +51,7 @@
                     </div>
                 </div>
                 <div class="form-group form-setting">
-                    <label for="">Xác nhận mật khẩu</label>
+                    <label for="">Confirm password</label>
                     <input
                         type="password"
                         name=""
@@ -161,16 +163,20 @@ export default {
 }
 </script>
 <style scoped>
-.form {
-    width: 500px;
-    height: 100px;
-    background-color: blueviolet;
+.title {
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
 }
-.form h1 {
-    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-        "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-    padding: 20px 50px;
+.title h1{
+    color: #ffffff;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    text-shadow: 0 0 6px darkgoldenrod;
 }
+.form{
+    width: 90%;
+}
+
 .form-setting .errors {
     height: 30px;
     background-color: aliceblue;
@@ -182,11 +188,9 @@ export default {
     font-weight: bold;
 }
 .form-login {
-    margin-top: 50px;
-    background-color: antiquewhite;
-    background-image: url("../../../../public/image/bglogin.jpg");
-    box-shadow: 0 0 5px blue;
-    border-radius: 10px;
+    min-width: 100%;
+    height: 700px;
+    background-image: url("../../../../public/image/CSS-Particles.gif");
 }
 .form-login h1 {
     padding-top: 20px;
@@ -202,15 +206,21 @@ export default {
     color: red;
 }
 .form-setting label {
-    color: white;
-    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+    color: #ffffff;
+    text-shadow: 0 0 6px orange;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 20px;
     margin-left: 20px;
     text-align: center;
 }
 .form-setting button {
+    background-color: darkolivegreen;
     margin-bottom: 20px;
     margin-right: 10px;
+}
+.form-setting button:hover{
+    background-color: bisque;
+    transition: 2s;
 }
 </style>
 <style lang="scss" scoped></style>
