@@ -12,19 +12,27 @@ class LoginController extends Controller
     public function login(LoginRequest $request)
     {
         $user = User::where('email', $request->email)->first();
-
-        if (!Hash::check($request->password, $user->password, [])) {
+        if($user == null)
+        {
             return response()->json([
-                'message' => 'User not exist'
+                'message' => 'Email not exits',
+                'sucess' => 'false',
             ], 404);
+        }else{
+            if (!Hash::check($request->password, $user->password, [])) {
+                return response()->json([
+                    'message' => 'Password false'
+                ], 404);
+            }else{
+                $token = $user->createToken('authToken')->plainTextToken;
+                return response()->json([
+                    'message' => 'login succesfully',
+                    'access_token' => $token,
+                    'type_token' => 'Bearer'
+                ], 200);
+            }
         }
 
-        $token = $user->createTOken('authToken')->plainTextToken;
 
-        return response()->json([
-            'message' => 'đăng nhập thành công',
-            'access_token' => $token,
-            'type_token' => 'Bearer'
-        ], 200);
     }
 }
